@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ed!c(%^u$e&k99b2^erhiie0vy*cvmmp6bb%7hdk!1@=r0j_0='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # third party
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
+    
+    # 생성한 앱
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +89,40 @@ DATABASES = {
     }
 }
 
+# Custom User Model
+AUTH_USER_MODEL = "accounts.User"
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "accounts.auth.CustomJWTAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "UNAUTHENTICATED_USER": None,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
+SIMPLE_JWT = {
+  "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+  "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+#   "ROTATE_REFRESH_TOKENS": True, # 사용하려면 아래 설정과 함께 True 로 해야함 (access token뿐만 아니라 refresh token 도 재발급)
+#   "BLACKLIST_AFTER_ROTATION": True, # 이미 제출한 (사용된) refresh 토큰은 blacklist 에 추가
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "django_pjt",
+    "DESCRIPTION": "My API description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "AUTHENTICATION": [
+        {
+            "name": "Bearer",
+            "scheme": "bearer",
+            "type": "http",
+            "bearerFormat": "JWT",
+        },
+    ],
+    'SWAGGER_UI_SETTINGS': {"persistAuthorization": True}
+
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
