@@ -5,32 +5,39 @@
 - [x] 로그아웃 기능
 - [x] swagger 기능
   - [ ] 트러블슈팅 2 - Authorize 버튼 해결
-- [ ] 배포
+- [x] 배포
 - [x] Postman 테스트
 - [x] Pytest 테스트
   - [x] 트러블슈팅 1 - token expired 통과
 
 ---
 ## AWS EC2 서버 배포
-* 아직 안 함 해야함.
-[서버 링크]()
+[서버 링크](43.200.101.60:8000/swagger)
+
+https://43.200.101.60:8000
 
 ## 기능
 ### 회원가입
 - endpoint : `signup/`
-- 
+
 
 ### 로그인
 - endpoint : `login/`
-- 
+
 ### 로그아웃 (JWT 인증)
 - endpoint : `logout/`
-- 
+  
 ### swagger
 - endpoint : `swagger/`
 
 ## 테스트
 Postman 으로 먼저 진행하였고 이후에 Pytest도 진행
+
+### Pytest 진행법
+manage.py 와 같은 레벨의 디렉토리(`django_pjt`)에서 아래명령어 입력
+```zsh
+pytest
+```
 
 ## 트러블슈팅
 ### 1
@@ -39,6 +46,64 @@ Postman 으로 먼저 진행하였고 이후에 Pytest도 진행
 <summary><b>Pytest - test_logout_expired_token 실패</b></summary>
 <div markdown="1">
 
+<details>
+<summary><b>Pytest 진행 내용 - 실패</b></summary>
+<div markdown="1">
+
+```zsh
+❯ pytest
+========================================== test session starts ===========================================
+platform darwin -- Python 3.10.10, pytest-8.4.0, pluggy-1.6.0
+django: version: 4.2, settings: django_pjt.settings (from ini)
+rootdir: /Users/nyum76/Documents/project/django_pjt
+configfile: pytest.ini
+plugins: django-4.11.1
+collected 7 items                                                                                        
+
+accounts/test_accounts.py ......F                                                                  [100%]
+
+================================================ FAILURES ================================================
+_______________________________________ test_logout_expired_token ________________________________________
+
+settings = <pytest_django.fixtures.SettingsWrapper object at 0x1076f7df0>
+
+    @pytest.mark.django_db
+    def test_logout_expired_token(settings):
+        import time
+        from datetime import timedelta
+        from rest_framework_simplejwt.tokens import RefreshToken
+        from django.urls import reverse
+        from rest_framework.test import APIClient
+        from django.contrib.auth import get_user_model
+    
+        # 1. settings 변경
+        settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(seconds=1)
+        # 2. simplejwt settings reload
+        importlib.reload(jwt_settings)
+    
+        User = get_user_model()
+        user = User.objects.create_user(username="expireuser", password="expirepass", nickname="expire")
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+    
+        time.sleep(2)
+    
+        client = APIClient()
+        logout_url = reverse('logout')
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        response = client.post(logout_url)
+>       assert response.status_code == 401
+E       assert 200 == 401
+E        +  where 200 = <Response status_code=200, "application/json">.status_code
+
+accounts/test_accounts.py:111: AssertionError
+======================================== short test summary info =========================================
+FAILED accounts/test_accounts.py::test_logout_expired_token - assert 200 == 401
+====================================== 1 failed, 6 passed in 3.12s =======================================
+```
+
+</div>
+</details>
 
 Postman 에서는 만료된 토큰으로 로그아웃시 아래와 같이 떴는데
 ```
@@ -71,6 +136,28 @@ Pytest에서 settings를 바꿔도, 이미 임포트된 시점의 설정이 계�
 "ACCESS_TOKEN_LIFETIME": timedelta(seconds=1),
 ```
 
+<details>
+<summary><b>Pytest 진행 내용 - 성공</b></summary>
+<div markdown="1">
+
+```zsh
+❯ pytest
+========================================== test session starts ===========================================
+platform darwin -- Python 3.10.10, pytest-8.4.0, pluggy-1.6.0
+django: version: 4.2, settings: django_pjt.settings (from ini)
+rootdir: /Users/nyum76/Documents/project/django_pjt
+configfile: pytest.ini
+plugins: django-4.11.1
+collected 7 items                                                                                        
+
+accounts/test_accounts.py .......                                                                  [100%]
+
+=========================================== 7 passed in 2.96s ============================================
+```
+
+
+</div>
+</details>
 
 </div>
 </details>
