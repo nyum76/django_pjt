@@ -1,5 +1,16 @@
 # django_pjt
 
+⭐️ README 문서의 토글 (삼각형 모양) 을 누르면 토글된 내용이 나와요
+
+## 🔖 목차
+1. [🚀 AWS EC2 서버 배포](#-aws-ec2-서버-배포)
+2. [✅ 기능](#-기능)
+3. [🚨 트러블슈팅](#-트러블슈팅)
+
+
+<details>
+<summary><b>진행 - 체크리스트</b></summary>
+<div markdown="1">
 - [x] 회원가입 기능
 - [x] 로그인 기능
 - [x] 로그아웃 기능
@@ -10,14 +21,19 @@
 - [x] Pytest 테스트
   - [x] 트러블슈팅 1 - token expired 통과
 
+</div>
+</details>
+
 ---
-## AWS EC2 서버 배포
+
+
+## 🚀 AWS EC2 서버 배포
 [서버 링크](http://43.200.101.60:8000/swagger/)
 
 http://43.200.101.60:8000/
 
-## 기능
-> 테스트는 Postman 으로 진행됨
+## ✅ 기능
+> Postman 으로 테스트한 사진 첨부
 ### 회원가입
 - endpoint : `signup/`
 - 회원가입 성공
@@ -66,6 +82,8 @@ http://43.200.101.60:8000/
 }
 ```
 ![로그인 실패](/img/login_failed.png)
+
+---
 
 ### 로그아웃 (JWT 인증)
 - endpoint : `logout/`
@@ -124,7 +142,7 @@ manage.py 와 같은 레벨의 디렉토리(`django_pjt`)에서 아래명령어 
 pytest
 ```
 
-## 트러블슈팅
+## 🚨 트러블슈팅
 ### 1
 
 <details>
