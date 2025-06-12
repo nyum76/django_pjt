@@ -101,7 +101,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-  "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+  "ACCESS_TOKEN_LIFETIME": timedelta(seconds=1),
   "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 #   "ROTATE_REFRESH_TOKENS": True, # 사용하려면 아래 설정과 함께 True 로 해야함 (access token뿐만 아니라 refresh token 도 재발급)
 #   "BLACKLIST_AFTER_ROTATION": True, # 이미 제출한 (사용된) refresh 토큰은 blacklist 에 추가
