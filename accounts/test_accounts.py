@@ -3,6 +3,8 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import override_settings
 from datetime import timedelta
+import importlib
+from rest_framework_simplejwt import settings as jwt_settings
 
 @pytest.mark.django_db
 def test_signup_success():
@@ -82,13 +84,18 @@ def test_logout_invalid_token():
     }
 
 @pytest.mark.django_db
-@override_settings(SIMPLE_JWT={"ACCESS_TOKEN_LIFETIME": timedelta(seconds=1), "REFRESH_TOKEN_LIFETIME": timedelta(days=1)})
-def test_logout_expired_token():
+def test_logout_expired_token(settings):
     import time
+    from datetime import timedelta
     from rest_framework_simplejwt.tokens import RefreshToken
     from django.urls import reverse
     from rest_framework.test import APIClient
     from django.contrib.auth import get_user_model
+
+    # 1. settings 변경
+    settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(seconds=1)
+    # 2. simplejwt settings reload
+    importlib.reload(jwt_settings)
 
     User = get_user_model()
     user = User.objects.create_user(username="expireuser", password="expirepass", nickname="expire")
