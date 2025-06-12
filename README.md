@@ -11,6 +11,7 @@
 <details>
 <summary><b>진행 - 체크리스트</b></summary>
 <div markdown="1">
+
 - [x] 회원가입 기능
 - [x] 로그인 기능
 - [x] 로그아웃 기능
