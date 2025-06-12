@@ -17,21 +17,97 @@
 http://43.200.101.60:8000/
 
 ## 기능
+> 테스트는 Postman 으로 진행됨
 ### 회원가입
 - endpoint : `signup/`
+- 회원가입 성공
+```
+{
+"username": "JIN HO",
+"nickname": "Mentos"
+}
+```
+![회원가입 성공](/img/signup_success.png)
+
+- 회원가입 실패
+```
+{
+  "error": {
+  "code": "USER_ALREADY_EXISTS" ,
+  "message": 이미 가입된 사용자입니다.
+  }
+}
+```
+![회원가입 실패](/img/signup_failed.png)
 
 
 ### 로그인
 - endpoint : `login/`
+- 로그인 성공
+```
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE4MzQzLCJpYXQiOjE3NDk3MTgwNDMsImp0aSI6IjYzYzc2MWU2YzI0ZTQ5MWJhZDBlMzdiNjdjYmQwMzhmIiwidXNlcl9pZCI6N30.iJjYD8-5er4u6H2JDVVGUCw9WM_M5d8UWuOulVn2REU"
+}
+```
+![로그인 성공](/img/login_failed.png)
+
+- 로그인 실패
+```
+{
+    "error": {
+        "code": "INVALID_CREDENTIALS",
+        "message": "아이디 또는 비밀번호가 올바르지 않습니다."
+    }
+}
+```
+![로그인 실패](/img/login_failed.png)
 
 ### 로그아웃 (JWT 인증)
 - endpoint : `logout/`
+- 로그아웃 성공
+
+![로그아웃 성공](/img/logout_success.png)
+
+- 토큰 만료
+```
+{
+    "error": {
+        "code": "TOKEN_EXPIRED",
+        "message": "토큰이 만료되었습니다."
+    }
+}
+```
+
+![토큰 만료](/img/token_expired.png)
+
+
+- 토큰 없음
+```
+{
+    "error": {
+        "code": "TOKEN_NOT_FOUND",
+        "message": "토큰이 없습니다."
+    }
+}
+```
+![토큰 없음](/img/token_not_found.png)
+
+
+- 유효하지 않은 토큰
+```
+{
+    "error": {
+        "code": "INVALID_TOKEN",
+        "message": "토큰이 유효하지 않습니다."
+    }
+}
+```
+![유효하지 않은 토큰](/img/invalid_token.png)
+
   
 ### swagger
 - endpoint : `swagger/`
-
-## 테스트
-Postman 으로 먼저 진행하였고 이후에 Pytest도 진행
+![swagger](/img/swagger.png)
 
 ### Pytest 진행법
 manage.py 와 같은 레벨의 디렉토리(`django_pjt`)에서 아래명령어 입력
